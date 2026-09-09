@@ -3,8 +3,8 @@
   <view class="title">今天</view><view class="date-label">{{dateLabel}}</view>
   <view class="summer-progress"><view><text>暑假第 </text><text class="blue strong">{{progress.elapsed}}</text><text> 天</text></view><view><text>还剩 </text><text class="blue strong">{{progress.remaining}}</text><text> 天</text></view></view>
   <view class="bar"><view class="bar-fill" style="width: {{progress.percent}}%"></view></view>
-  <view wx:if="{{overdue.length}}" class="overdue card">
-    <view><text class="overdue-count">{{overdue.length}}</text><text> 项计划已错过</text></view><text class="overdue-hint">长按任务可重新安排</text>
+  <view wx:if="{{overdueCount}}" class="overdue card" bindtap="showOverdue">
+    <view><text class="overdue-count">{{overdueCount}}</text><text> 项计划已错过</text></view><text class="overdue-hint">点击重新安排 ›</text>
   </view>
   <scroll-view class="week" scroll-x enhanced show-scrollbar="{{false}}">
     <view wx:for="{{week}}" wx:key="value" class="day {{item.selected ? 'selected' : ''}}" data-day="{{item.value}}" bindtap="selectDay">
@@ -16,7 +16,7 @@
   <view class="timeline">
     <view wx:for="{{tasks}}" wx:key="_id" class="task {{item.done ? 'done' : ''}}" data-id="{{item._id}}" data-day="{{item.occurrenceDate}}" bindlongpress="taskMenu">
       <text class="time">{{item.time || '全天'}}</text>
-      <button class="check {{item.done ? 'checked' : ''}}" data-id="{{item._id}}" data-day="{{item.occurrenceDate}}" data-done="{{item.done}}" bindtap="toggle">{{item.done ? '✓' : ''}}</button>
+      <view class="check {{item.done ? 'checked' : ''}}" data-id="{{item._id}}" data-day="{{item.occurrenceDate}}" data-done="{{item.done}}" bindtap="toggle">{{item.done ? '✓' : ''}}</view>
       <view class="task-main"><text class="task-title">{{item.title}}</text><text wx:if="{{item.note}}" class="task-note">{{item.note}}</text></view>
     </view>
   </view>

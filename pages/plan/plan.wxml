@@ -12,7 +12,7 @@
     <view class="list-head"><view><text class="section-title">{{selectedDate}}</text><text class="count">{{tasks.length}} 项</text></view><button bindtap="addTask">＋ 添加</button></view>
     <view wx:if="{{!tasks.length}}" class="empty">这天还没有计划</view>
     <view wx:for="{{tasks}}" wx:key="_id" class="task-row" data-id="{{item._id}}" bindtap="editTask">
-      <button catchtap="toggle" class="check {{item.done ? 'checked' : ''}}" data-id="{{item._id}}" data-day="{{item.occurrenceDate}}" data-done="{{item.done}}">{{item.done ? '✓' : ''}}</button>
+      <view catchtap="toggle" class="check {{item.done ? 'checked' : ''}}" data-id="{{item._id}}" data-day="{{item.occurrenceDate}}" data-done="{{item.done}}">{{item.done ? '✓' : ''}}</view>
       <view class="task-copy"><text class="task-title {{item.done ? 'done' : ''}}">{{item.title}}</text><text class="task-meta">{{item.time || '全天'}}{{item.repeat.type !== 'once' ? ' · 重复' : ''}}</text></view><text class="chevron">›</text>
     </view>
   </block>
