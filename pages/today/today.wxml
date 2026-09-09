@@ -1,0 +1,29 @@
+<view class="page">
+  <view class="topline"><text class="eyebrow">{{vacation.name}}</text><text class="sync {{syncText === '离线模式' ? 'offline' : ''}}">● {{syncText}}</text></view>
+  <view class="title">今天</view><view class="date-label">{{dateLabel}}</view>
+  <view class="summer-progress"><view><text>暑假第 </text><text class="blue strong">{{progress.elapsed}}</text><text> 天</text></view><view><text>还剩 </text><text class="blue strong">{{progress.remaining}}</text><text> 天</text></view></view>
+  <view class="bar"><view class="bar-fill" style="width: {{progress.percent}}%"></view></view>
+  <view wx:if="{{overdue.length}}" class="overdue card">
+    <view><text class="overdue-count">{{overdue.length}}</text><text> 项计划已错过</text></view><text class="overdue-hint">长按任务可重新安排</text>
+  </view>
+  <scroll-view class="week" scroll-x enhanced show-scrollbar="{{false}}">
+    <view wx:for="{{week}}" wx:key="value" class="day {{item.selected ? 'selected' : ''}}" data-day="{{item.value}}" bindtap="selectDay">
+      <text class="weekday">{{item.weekday}}</text><text class="number">{{item.number}}</text><view class="dot {{item.hasTask ? 'visible' : ''}}"></view>
+    </view>
+  </scroll-view>
+  <view class="section-head"><text class="section-title">今日安排</text><view><text class="blue big-number">{{doneCount}}</text><text class="muted">/{{tasks.length}} 已完成</text></view></view>
+  <view wx:if="{{!tasks.length}}" class="empty">这一天还没有安排，点击下方 ＋ 添加</view>
+  <view class="timeline">
+    <view wx:for="{{tasks}}" wx:key="_id" class="task {{item.done ? 'done' : ''}}" data-id="{{item._id}}" data-day="{{item.occurrenceDate}}" bindlongpress="taskMenu">
+      <text class="time">{{item.time || '全天'}}</text>
+      <button class="check {{item.done ? 'checked' : ''}}" data-id="{{item._id}}" data-day="{{item.occurrenceDate}}" data-done="{{item.done}}" bindtap="toggle">{{item.done ? '✓' : ''}}</button>
+      <view class="task-main"><text class="task-title">{{item.title}}</text><text wx:if="{{item.note}}" class="task-note">{{item.note}}</text></view>
+    </view>
+  </view>
+  <view wx:if="{{goal}}" class="goal-card card" data-id="{{goal._id}}">
+    <view class="goal-top"><text class="section-title">本周目标</text><text><text class="blue strong">{{goal.progress.done}}/{{goal.progress.total}}</text> 完成</text></view>
+    <view class="goal-name">{{goal.title}}</view><view class="bar small"><view class="bar-fill" style="width: {{goal.progress.percent}}%"></view></view>
+  </view>
+  <button wx:else class="add-goal" bindtap="addGoal">＋ 添加第一个暑期目标</button>
+  <picker wx:if="{{showMovePicker}}" mode="date" value="{{day}}" start="{{vacation.startDate}}" end="{{vacation.endDate}}" bindchange="chooseMove"><view class="picker-mask"><view class="picker-card">点击选择新的安排日期</view></view></picker>
+</view>

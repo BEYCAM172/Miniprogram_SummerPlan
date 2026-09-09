@@ -1,0 +1,13 @@
+{
+  "pages": ["pages/index/index", "pages/setup/setup", "pages/today/today", "pages/plan/plan", "pages/profile/profile", "pages/task-edit/task-edit", "pages/goal-edit/goal-edit"],
+  "window": { "navigationStyle": "custom", "backgroundColor": "#f8f7f3", "backgroundTextStyle": "dark" },
+  "tabBar": {
+    "custom": true, "color": "#777777", "selectedColor": "#1769ff", "backgroundColor": "#fbfaf7",
+    "list": [
+      { "pagePath": "pages/today/today", "text": "今天" },
+      { "pagePath": "pages/plan/plan", "text": "计划" },
+      { "pagePath": "pages/profile/profile", "text": "我的暑假" }
+    ]
+  },
+  "style": "v2", "componentFramework": "glass-easel", "sitemapLocation": "sitemap.json", "lazyCodeLoading": "requiredComponents"
+}

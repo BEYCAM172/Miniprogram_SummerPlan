@@ -1,0 +1,8 @@
+<view class="page editor">
+  <view class="nav"><text bindtap="back">取消</text><text class="nav-title">{{editing ? '编辑目标' : '新建目标'}}</text><text class="save" bindtap="save">保存</text></view>
+  <view class="field first"><text class="label">目标名称</text><input class="input title-input" value="{{title}}" maxlength="24" placeholder="这个暑假想完成什么？" focus="{{!editing}}" bindinput="onTitle"/></view>
+  <view class="field"><text class="label">目标说明</text><textarea class="input textarea" value="{{description}}" maxlength="100" placeholder="写下完成它的理由（可选）" bindinput="onDescription"/></view>
+  <view class="form-row"><text>截止日期</text><picker mode="date" value="{{deadline}}" start="{{vacation.startDate}}" end="{{vacation.endDate}}" bindchange="onDeadline"><view class="value">{{deadline}} ›</view></picker></view>
+  <view class="field color-field"><text class="label">识别色</text><view class="colors"><view wx:for="{{colors}}" wx:key="*this" class="color {{color === item ? 'selected' : ''}}" style="background: {{item}}" data-color="{{item}}" bindtap="selectColor"></view></view></view>
+  <button class="primary" loading="{{saving}}" bindtap="save">{{editing ? '保存修改' : '创建目标'}}</button><button wx:if="{{editing}}" class="delete" bindtap="remove">删除目标</button>
+</view>

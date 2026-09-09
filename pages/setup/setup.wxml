@@ -1,0 +1,15 @@
+<view class="setup">
+  <view class="eyebrow">{{editing ? 'EDIT YOUR SUMMER' : 'SUMMER, YOUR WAY'}}</view>
+  <view wx:if="{{editing}}" class="hero">调整这段<br/>夏日时间。</view>
+  <view wx:else class="hero">把暑假<br/>过成自己的。</view>
+  <view class="desc">先定下这段时间，计划数据会同步至微信云开发，换设备后也能恢复。</view>
+  <view class="form">
+    <view class="field"><text class="label">暑假名称</text><input class="input" value="{{name}}" maxlength="16" bindinput="onName"/></view>
+    <view class="dates">
+      <view class="field half"><text class="label">开始日期</text><picker mode="date" value="{{startDate}}" bindchange="onStart"><view class="date-input">{{startDate}}</view></picker></view>
+      <view class="field half"><text class="label">结束日期</text><picker mode="date" value="{{endDate}}" start="{{startDate}}" bindchange="onEnd"><view class="date-input">{{endDate}}</view></picker></view>
+    </view>
+  </view>
+  <button class="primary" loading="{{saving}}" data-sample="{{false}}" bindtap="create">{{editing ? '保存修改' : '创建空白计划'}}</button>
+  <button wx:if="{{!editing}}" class="sample" loading="{{saving}}" data-sample="{{true}}" bindtap="create">使用示例计划体验</button>
+</view>

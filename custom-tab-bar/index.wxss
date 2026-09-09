@@ -1,0 +1,4 @@
+.tabbar { position: fixed; z-index: 99; left: 0; right: 0; bottom: 0; height: calc(112rpx + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom); box-sizing: content-box; display: flex; align-items: center; background: rgba(251,250,247,.97); border-top: 1rpx solid #e5e3dc; }
+.tab { flex: 1; display: flex; height: 100%; flex-direction: column; align-items: center; justify-content: center; gap: 6rpx; color: #777; font-size: 22rpx; }
+.tab:nth-child(2) { margin-right: 100rpx; }.active { color: #1769ff; font-weight: 650; }.icon { font-size: 36rpx; line-height: 38rpx; }
+.add { position: absolute; left: 50%; top: -42rpx; transform: translateX(-50%); width: 104rpx; height: 104rpx; padding: 0; line-height: 96rpx; border-radius: 50%; background: #1769ff; color: white; font-size: 58rpx; font-weight: 300; box-shadow: 0 14rpx 34rpx rgba(23,105,255,.28); }

@@ -1,0 +1,8 @@
+.setup { min-height: 100vh; box-sizing: border-box; padding: calc(env(safe-area-inset-top) + 80rpx) 44rpx 60rpx; }
+.hero { margin-top: 28rpx; white-space: pre-line; font-size: 76rpx; line-height: 1.18; font-weight: 850; letter-spacing: -3rpx; }
+.desc { margin-top: 30rpx; width: 92%; color: #737982; font-size: 28rpx; line-height: 1.7; }
+.form { margin-top: 74rpx; }
+.dates { display: flex; gap: 18rpx; }.half { flex: 1; }
+.date-input { height: 92rpx; line-height: 92rpx; padding: 0 20rpx; background: #fff; border: 1rpx solid #dedcd5; border-radius: 16rpx; font-size: 26rpx; }
+.primary { margin-top: 34rpx; }
+.sample { margin-top: 18rpx; background: transparent; color: #1769ff; font-size: 28rpx; }

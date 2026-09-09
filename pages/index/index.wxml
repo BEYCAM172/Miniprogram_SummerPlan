@@ -1,0 +1,6 @@
+<view class="splash">
+  <view class="mark">夏</view>
+  <view class="brand">暑期计划</view>
+  <view class="message">{{message}}</view>
+  <view class="pulse"></view>
+</view>
