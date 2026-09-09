@@ -2,5 +2,5 @@
   <view wx:for="{{list}}" wx:key="url" class="tab {{selected === index ? 'active' : ''}}" data-url="{{item.url}}" bindtap="switchTab">
     <text class="icon">{{item.icon}}</text><text>{{item.text}}</text>
   </view>
-  <button class="add" bindtap="add">＋</button>
+  <view class="fab" bindtap="add">＋</view>
 </view>

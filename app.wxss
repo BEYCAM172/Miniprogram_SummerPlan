@@ -1,6 +1,6 @@
 page { background: #f8f7f3; color: #101722; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif; }
 button { font-weight: 600; } button::after { border: 0; }
-.page { min-height: 100vh; box-sizing: border-box; padding: calc(env(safe-area-inset-top) + 34rpx) 36rpx 180rpx; }
+.page { min-height: 100vh; box-sizing: border-box; padding: calc(env(safe-area-inset-top) + 84rpx) 36rpx 180rpx; }
 .eyebrow { color: #69707a; font-size: 26rpx; letter-spacing: 2rpx; }
 .title { margin-top: 10rpx; font-size: 68rpx; line-height: 1.1; font-weight: 800; letter-spacing: -2rpx; }
 .section-title { font-size: 38rpx; font-weight: 750; }
