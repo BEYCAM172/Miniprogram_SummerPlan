@@ -7,14 +7,20 @@ async function put(name, openid, item) {
   const data = { ...item, _openid: openid }; const id = data._id; delete data._id
   await db.collection(name).doc(id).set({ data })
 }
+async function putMany(name, openid, rows) {
+  for (let index = 0; index < rows.length; index += 20) {
+    await Promise.all(rows.slice(index, index + 20).map(item => put(name, openid, item)))
+  }
+}
 exports.main = async event => {
   const { OPENID: openid } = cloud.getWXContext()
   if (!['clear', 'sample'].includes(event.action)) throw new Error('Unsupported batch action')
   await clear(openid)
   if (event.action === 'sample') {
     await put('vacations', openid, event.vacation)
-    for (const goal of event.sample.goals || []) await put('goals', openid, goal)
-    for (const task of event.sample.tasks || []) await put('tasks', openid, task)
+    await putMany('goals', openid, event.sample.goals || [])
+    await putMany('tasks', openid, event.sample.tasks || [])
+    await putMany('task_records', openid, event.sample.records || [])
   }
   return { ok: true }
 }

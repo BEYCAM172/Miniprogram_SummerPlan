@@ -4,7 +4,7 @@
   <view class="summer-progress"><view><text>暑假第 </text><text class="blue strong">{{progress.elapsed}}</text><text> 天</text></view><view><text>还剩 </text><text class="blue strong">{{progress.remaining}}</text><text> 天</text></view></view>
   <view class="bar"><view class="bar-fill" style="width: {{progress.percent}}%"></view></view>
   <view wx:if="{{overdueCount}}" class="overdue card" bindtap="showOverdue">
-    <view><text class="overdue-count">{{overdueCount}}</text><text> 项计划已错过</text></view><text class="overdue-hint">点击重新安排 ›</text>
+    <view><text class="overdue-count">{{overdueCount}}</text><text> 项近期待处理</text></view><text class="overdue-hint">点击重新安排 ›</text>
   </view>
   <scroll-view class="week" scroll-x enhanced show-scrollbar="{{false}}">
     <view wx:for="{{week}}" wx:key="value" class="day {{item.selected ? 'selected' : ''}}" data-day="{{item.value}}" bindtap="selectDay">

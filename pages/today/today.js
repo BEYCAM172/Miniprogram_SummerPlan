@@ -17,7 +17,8 @@ Page({
       return { value, weekday: date.weekdayCN(value), number: d.getDate(), selected: value === day, hasTask: model.instancesForDay(state, value).length > 0 }
     })
     const yesterday = date.addDays(date.today(), -1)
-    const allOverdue = state.vacation.startDate <= yesterday ? date.eachDay(state.vacation.startDate, yesterday < state.vacation.endDate ? yesterday : state.vacation.endDate)
+    const recentStart = date.addDays(date.today(), -7) > state.vacation.startDate ? date.addDays(date.today(), -7) : state.vacation.startDate
+    const allOverdue = recentStart <= yesterday ? date.eachDay(recentStart, yesterday < state.vacation.endDate ? yesterday : state.vacation.endDate)
       .flatMap(value => model.instancesForDay(state, value)).filter(item => !item.done) : []
     const overdue = allOverdue.slice(-6)
     const goalData = state.goals[0]

@@ -34,6 +34,12 @@ function sample(start, end) {
     { _id: id('task'), title: '晨跑 3 公里', date: start, time: '08:30', note: '', goalId: goal2._id, repeat: { type: 'weekly', weekdays: [1, 3, 5] }, repeatEnd: end },
     { _id: id('task'), title: '阅读 20 页', date: start, time: '21:00', note: '', goalId: '', repeat: { type: 'daily', weekdays: [] }, repeatEnd: end }
   ].map(item => ({ ...item, createdAt: now(), updatedAt: now() }))
-  return { goals: [goal1, goal2], tasks, records: [] }
+  const historyEnd = date.addDays(date.today() < end ? date.today() : end, -1)
+  const historyStart = date.addDays(historyEnd, -34) > start ? date.addDays(historyEnd, -34) : start
+  const records = historyStart <= historyEnd ? date.eachDay(historyStart, historyEnd).flatMap((day, dayIndex) => tasks
+    .filter(task => occursOn(task, day))
+    .filter((task, taskIndex) => (dayIndex + taskIndex) % 4 !== 0)
+    .map(task => ({ _id: id('record'), taskId: task._id, occurrenceDate: day, done: true, completedAt: `${day}T12:00:00.000Z`, createdAt: now(), updatedAt: now() }))) : []
+  return { goals: [goal1, goal2], tasks, records }
 }
 module.exports = { id, now, occursOn, instancesForDay, sample }

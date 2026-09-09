@@ -94,7 +94,7 @@ async function flushQueue() {
 async function batch(action, vacation) {
   const sample = action === 'sample' ? model.sample(vacation.startDate, vacation.endDate) : null
   if (action === 'clear') snapshot = { ...snapshot, vacation: null, goals: [], tasks: [], records: [] }
-  else snapshot = { ...snapshot, vacation, goals: sample.goals, tasks: sample.tasks, records: [] }
+  else snapshot = { ...snapshot, vacation, goals: sample.goals, tasks: sample.tasks, records: sample.records }
   setSync('pending')
   try {
     await wx.cloud.callFunction({ name: 'batchData', data: { action, vacation, sample } })
