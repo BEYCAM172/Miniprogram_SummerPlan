@@ -10,7 +10,11 @@ Page({
     if (task) {
       const repeatIndex = repeatTypes.findIndex(item => item.value === (task.repeat && task.repeat.type || 'once'))
       this.setData({ id: task._id, title: task.title, date: task.date, time: task.time || '', note: task.note || '', goalId: task.goalId || '', goalIndex: Math.max(0, state.goals.findIndex(item => item._id === task.goalId) + 1), repeatIndex, weekdays: this.data.weekdays.map(item => ({ ...item, selected: (task.repeat.weekdays || []).includes(item.value) })), vacation, goalNames, editing: true })
-    } else this.setData({ date: options.date || date.today(), vacation, goalNames })
+    } else {
+      const requested = options.date || date.today()
+      const initialDate = requested < vacation.startDate ? vacation.startDate : requested > vacation.endDate ? vacation.endDate : requested
+      this.setData({ date: initialDate, vacation, goalNames })
+    }
   },
   back() { wx.navigateBack() },
   onTitle(e) { this.setData({ title: e.detail.value }) }, onDate(e) { this.setData({ date: e.detail.value }) }, onTime(e) { this.setData({ time: e.detail.value }) }, clearTime() { this.setData({ time: '' }) }, onNote(e) { this.setData({ note: e.detail.value }) },
@@ -25,7 +29,8 @@ Page({
     const existing = this.data.id ? store.getState().tasks.find(item => item._id === this.data.id) : {}
     this.setData({ saving: true })
     try {
-      await store.upsert('tasks', { ...existing, _id: this.data.id || undefined, title, date: this.data.date, time: this.data.time, note: this.data.note.trim(), goalId: this.data.goalId, repeat: { type: repeat, weekdays: repeat === 'weekly' ? weekdays : [] }, repeatEnd: this.data.vacation.endDate })
+      const saved = await store.upsert('tasks', { ...existing, _id: this.data.id || undefined, title, date: this.data.date, time: this.data.time, note: this.data.note.trim(), goalId: this.data.goalId, repeat: { type: repeat, weekdays: repeat === 'weekly' ? weekdays : [] }, repeatEnd: this.data.vacation.endDate })
+      if (this.data.editing) await store.pruneTaskRecords(saved)
       wx.showToast({ title: this.data.editing ? '已保存' : '已添加' }); setTimeout(() => wx.navigateBack(), 250)
     } catch (error) { wx.showToast({ title: '已离线保存', icon: 'none' }); setTimeout(() => wx.navigateBack(), 500) }
   },

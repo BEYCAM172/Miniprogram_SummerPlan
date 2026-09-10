@@ -17,7 +17,14 @@ assert.equal(model.instancesForDay(state, '2026-07-01').length, 2)
 assert.equal(model.instancesForDay(state, '2026-07-02').length, 1)
 assert.equal(stats.goalProgress(state, 'goal').total, 7)
 assert.equal(stats.goalProgress(state, 'goal').done, 1)
+assert.equal(stats.goalProgress(state, 'goal', '2026-07-03').total, 3)
+assert.equal(stats.summary(state, '2026-07-03').due, 4)
+assert.equal(stats.summary(state, '2026-07-03').percent, 25)
 assert.equal(date.addDays('2026-07-31', 1), '2026-08-01')
+
+const changedRepeat = { ...state.tasks[0], date: '2026-07-03', repeat: { type: 'once', weekdays: [] } }
+assert.equal(model.occursOn(changedRepeat, '2026-07-01'), false)
+assert.equal(model.occursOn(changedRepeat, '2026-07-03'), true)
 
 const moved = { ...state, records: [{ _id: 'move', taskId: 'weekly', occurrenceDate: '2026-07-01', done: false, rescheduledTo: '2026-07-02' }] }
 assert.equal(model.instancesForDay(moved, '2026-07-01').some(item => item._id === 'weekly'), false)

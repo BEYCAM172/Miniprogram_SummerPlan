@@ -5,7 +5,7 @@
     <view class="month-head"><button bindtap="previousMonth">‹</button><text>{{monthLabel}}</text><button bindtap="nextMonth">›</button></view>
     <view class="calendar card">
       <view wx:for="{{weekdays}}" wx:key="*this" class="weekday">{{item}}</view>
-      <view wx:for="{{cells}}" wx:key="value" class="cell {{!item.inMonth ? 'outside' : ''}} {{item.selected ? 'selected' : ''}} {{item.today ? 'today' : ''}}" data-date="{{item.value}}" bindtap="selectDate">
+      <view wx:for="{{cells}}" wx:key="value" class="cell {{!item.inMonth ? 'outside' : ''}} {{!item.inVacation ? 'disabled' : ''}} {{item.selected ? 'selected' : ''}} {{item.today ? 'today' : ''}}" data-date="{{item.value}}" bindtap="selectDate">
         <text>{{item.number}}</text><view wx:if="{{item.count}}" class="task-dot {{item.allDone ? 'complete' : ''}}"></view>
       </view>
     </view>
@@ -20,7 +20,7 @@
     <view class="goal-head"><text class="muted">把长期想法拆成每天能完成的小事</text><button bindtap="addGoal">＋ 新目标</button></view>
     <view wx:if="{{!goals.length}}" class="empty">还没有暑期目标</view>
     <view wx:for="{{goals}}" wx:key="_id" class="goal card" data-id="{{item._id}}" bindtap="editGoal">
-      <view class="goal-accent" style="background: {{item.color}}"></view><view class="goal-content"><view class="goal-title">{{item.title}}</view><view class="goal-meta">截止 {{item.deadlineText}} · {{item.progress.done}}/{{item.progress.total}} 项</view><view class="progress"><view style="width: {{item.progress.percent}}%; background: {{item.color}}"></view></view></view><text class="chevron">›</text>
+      <view class="goal-accent" style="background: {{item.color}}"></view><view class="goal-content"><view class="goal-title">{{item.title}}</view><view class="goal-meta">截止 {{item.deadlineText}} · 截至今天 {{item.progress.done}}/{{item.progress.total}} 项</view><view class="progress"><view style="width: {{item.progress.percent}}%; background: {{item.color}}"></view></view></view><text class="chevron">›</text>
     </view>
   </block>
 </view>

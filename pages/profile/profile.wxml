@@ -8,7 +8,7 @@
   </view>
   <view class="metrics">
     <view><text class="metric-value">{{summary.done}}</text><text class="metric-label">完成任务</text></view>
-    <view><text class="metric-value">{{summary.percent}}%</text><text class="metric-label">计划完成率</text></view>
+    <view><text class="metric-value">{{summary.percent}}%</text><text class="metric-label">截至今日完成率</text></view>
     <view><text class="metric-value">{{summary.streak}}</text><text class="metric-label">连续天数</text></view>
   </view>
   <view class="section-head"><text class="section-title">完成热力图</text><text class="muted">按日期点击查看</text></view>

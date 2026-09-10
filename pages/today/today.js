@@ -3,30 +3,33 @@ const model = require('../../services/model')
 const stats = require('../../services/stats')
 const store = require('../../services/store')
 Page({
-  data: { day: date.today(), dateLabel: '', week: [], tasks: [], doneCount: 0, overdue: [], overdueCount: 0, vacation: {}, progress: {}, goal: null, syncText: '' },
+  data: { day: date.today(), dateLabel: '', week: [], tasks: [], doneCount: 0, overdueCount: 0, vacation: {}, progress: {}, goals: [], syncText: '' },
   onLoad() { this.unsubscribe = store.subscribe(() => this.refresh()); this.refresh() },
   onUnload() { if (this.unsubscribe) this.unsubscribe() },
   onShow() { if (this.getTabBar()) this.getTabBar().setData({ selected: 0 }); this.refresh() },
   refresh() {
     const state = store.getState()
     if (!state.vacation) return wx.reLaunch({ url: '/pages/setup/setup' })
-    const day = this.data.day
+    const day = this.data.day < state.vacation.startDate ? state.vacation.startDate : this.data.day > state.vacation.endDate ? state.vacation.endDate : this.data.day
     const tasks = model.instancesForDay(state, day)
     const week = Array.from({ length: 7 }, (_, i) => {
       const value = date.addDays(day, i - 3); const d = date.parse(value)
-      return { value, weekday: date.weekdayCN(value), number: d.getDate(), selected: value === day, hasTask: model.instancesForDay(state, value).length > 0 }
+      return { value, weekday: date.weekdayCN(value), number: d.getDate(), selected: value === day, inVacation: value >= state.vacation.startDate && value <= state.vacation.endDate, hasTask: model.instancesForDay(state, value).length > 0 }
     })
     const yesterday = date.addDays(date.today(), -1)
-    const recentStart = date.addDays(date.today(), -7) > state.vacation.startDate ? date.addDays(date.today(), -7) : state.vacation.startDate
-    const allOverdue = recentStart <= yesterday ? date.eachDay(recentStart, yesterday < state.vacation.endDate ? yesterday : state.vacation.endDate)
+    const overdueStart = state.vacation.startDate
+    const allOverdue = overdueStart <= yesterday ? date.eachDay(overdueStart, yesterday < state.vacation.endDate ? yesterday : state.vacation.endDate)
       .flatMap(value => model.instancesForDay(state, value)).filter(item => !item.done) : []
-    const overdue = allOverdue.slice(-6)
-    const goalData = state.goals[0]
-    const goal = goalData ? { ...goalData, progress: stats.goalProgress(state, goalData._id) } : null
+    const goals = state.goals.map(item => ({ ...item, progress: stats.goalProgress(state, item._id) }))
+      .sort((a, b) => {
+        const aActive = a.deadline >= date.today() && a.progress.percent < 100 ? 0 : 1
+        const bActive = b.deadline >= date.today() && b.progress.percent < 100 ? 0 : 1
+        return aActive - bActive || a.deadline.localeCompare(b.deadline)
+      }).slice(0, 2)
     const syncMap = { syncing: '同步中', synced: '已同步', offline: '离线模式', pending: '等待同步', local: '本地数据' }
-    this.setData({ day, dateLabel: `${date.monthDay(day)} 周${date.weekdayCN(day)}`, week, tasks, doneCount: tasks.filter(item => item.done).length, overdue, overdueCount: allOverdue.length, vacation: state.vacation, progress: stats.vacationProgress(state.vacation), goal, syncText: syncMap[state.sync.status] || '本地数据' })
+    this.setData({ day, dateLabel: `${date.monthDay(day)} 周${date.weekdayCN(day)}`, week, tasks, doneCount: tasks.filter(item => item.done).length, overdueCount: allOverdue.length, vacation: state.vacation, progress: stats.vacationProgress(state.vacation), goals, syncText: syncMap[state.sync.status] || '本地数据' })
   },
-  selectDay(e) { this.setData({ day: e.currentTarget.dataset.day }, () => this.refresh()) },
+  selectDay(e) { const day = e.currentTarget.dataset.day; if (day < this.data.vacation.startDate || day > this.data.vacation.endDate) return; this.setData({ day }, () => this.refresh()) },
   async toggle(e) {
     const { id, day, done } = e.currentTarget.dataset
     wx.vibrateShort({ type: 'light' })
@@ -42,18 +45,9 @@ Page({
     } })
   },
   chooseMove(e) { this.setData({ showMovePicker: false }); this.move(this.data.movingId, this.data.movingDay, e.detail.value) },
-  async move(id, from, to) { try { await store.reschedule(id, from, to); wx.showToast({ title: '已调整日期' }) } catch (error) { wx.showToast({ title: '已离线保存', icon: 'none' }) } },
-  showOverdue() {
-    const list = this.data.overdue
-    if (!list.length) return
-    wx.showActionSheet({
-      itemList: list.map(item => `${date.monthDay(item.occurrenceDate)} · ${item.title}`),
-      success: result => {
-        const item = list[result.tapIndex]
-        this.move(item._id, item.occurrenceDate, date.today())
-      }
-    })
-  },
+  async move(id, from, to) { const target = to < this.data.vacation.startDate ? this.data.vacation.startDate : to > this.data.vacation.endDate ? this.data.vacation.endDate : to; try { await store.reschedule(id, from, target); wx.showToast({ title: '已调整日期' }) } catch (error) { wx.showToast({ title: '已离线保存', icon: 'none' }) } },
+  showOverdue() { wx.navigateTo({ url: '/pages/overdue/overdue' }) },
   confirmDelete(id) { wx.showModal({ title: '删除任务？', content: '重复任务的全部日期也会被删除。', confirmColor: '#d83b2d', success: async res => { if (res.confirm) { try { await store.remove('tasks', id) } catch (error) {} } } }) },
+  openGoal(e) { wx.navigateTo({ url: `/pages/goal-edit/goal-edit?id=${e.currentTarget.dataset.id}` }) },
   addGoal() { wx.navigateTo({ url: '/pages/goal-edit/goal-edit' }) }
 })

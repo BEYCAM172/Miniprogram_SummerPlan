@@ -109,6 +109,14 @@ async function reschedule(taskId, occurrenceDate, rescheduledTo) {
   const existing = snapshot.records.find(item => item.taskId === taskId && item.occurrenceDate === occurrenceDate)
   return upsert('records', { ...(existing || {}), taskId, occurrenceDate, done: false, completedAt: '', rescheduledTo })
 }
+async function pruneTaskRecords(task) {
+  const stale = snapshot.records.filter(record => record.taskId === task._id && !model.occursOn(task, record.occurrenceDate))
+  for (const record of stale) {
+    try { await remove('records', record._id) } catch (error) {}
+  }
+  return stale.length
+}
+function pendingCount() { return (wx.getStorageSync(QUEUE_KEY) || []).length }
 function subscribe(fn) { listeners.push(fn); return () => { listeners = listeners.filter(item => item !== fn) } }
 function getState() { return snapshot }
-module.exports = { bootstrap, syncFromCloud, flushQueue, getState, subscribe, upsert, remove, batch, toggleTask, reschedule }
+module.exports = { bootstrap, syncFromCloud, flushQueue, getState, subscribe, upsert, remove, batch, toggleTask, reschedule, pruneTaskRecords, pendingCount }

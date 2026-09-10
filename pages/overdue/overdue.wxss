@@ -1,0 +1,13 @@
+.overdue-page { padding-bottom: calc(80rpx + env(safe-area-inset-bottom)); }
+.nav { display:flex; align-items:center; justify-content:space-between; height:72rpx; color:#1769ff; font-size:26rpx; }
+.nav-title { color:#101722; font-weight:700; }.nav-space { visibility:hidden; }
+.intro { margin-top:22rpx; color:#7e848c; font-size:26rpx; line-height:1.6; }
+.overdue-item { margin-top:24rpx; }.item-date { color:#db6b18; font-size:23rpx; font-weight:650; }
+.item-title { margin-top:14rpx; font-size:31rpx; font-weight:700; }.item-note { margin-top:8rpx; color:#858a92; font-size:24rpx; }
+.actions { display:flex; gap:18rpx; margin-top:26rpx; }.action { flex:1; height:72rpx; line-height:72rpx; text-align:center; border-radius:14rpx; font-size:25rpx; font-weight:650; }
+.secondary-action { color:#1769ff; background:#edf3ff; }.primary-action { color:#fff; background:#1769ff; }
+.empty-card { margin-top:42rpx; padding:70rpx 30rpx; text-align:center; }.empty-title { display:block; margin-bottom:12rpx; font-size:30rpx; font-weight:700; }
+.modal-mask { position:fixed; inset:0; z-index:200; display:flex; align-items:flex-end; background:rgba(16,23,34,.3); }
+.modal-card { width:100%; padding:34rpx 36rpx calc(34rpx + env(safe-area-inset-bottom)); background:#fff; border-radius:30rpx 30rpx 0 0; }
+.modal-title { font-size:31rpx; font-weight:750; }.date-value { margin-top:28rpx; height:90rpx; line-height:90rpx; padding:0 24rpx; background:#f4f3ef; border-radius:16rpx; font-size:28rpx; }
+.modal-actions { display:flex; justify-content:flex-end; gap:40rpx; margin-top:30rpx; color:#737981; font-size:27rpx; }.confirm { color:#1769ff; font-weight:700; }

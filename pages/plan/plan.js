@@ -10,14 +10,24 @@ Page({
   onShow() { if (this.getTabBar()) this.getTabBar().setData({ selected: 1 }); this.refresh() },
   refresh() {
     const state = store.getState(); if (!state.vacation) return
-    const tasks = model.instancesForDay(state, this.data.selectedDate)
+    const selectedDate = this.data.selectedDate < state.vacation.startDate ? state.vacation.startDate : this.data.selectedDate > state.vacation.endDate ? state.vacation.endDate : this.data.selectedDate
+    const month = selectedDate.slice(0, 7)
+    const tasks = model.instancesForDay(state, selectedDate)
     const goals = state.goals.map(goal => ({ ...goal, progress: stats.goalProgress(state, goal._id), deadlineText: date.monthDay(goal.deadline) }))
-    this.setData({ monthLabel: calendar.monthLabel(this.data.month), cells: calendar.monthGrid(this.data.month, this.data.selectedDate, state, model.instancesForDay), tasks, goals })
+    this.setData({ selectedDate, month, monthLabel: calendar.monthLabel(month), cells: calendar.monthGrid(month, selectedDate, state, model.instancesForDay), tasks, goals })
   },
   switchView(e) { this.setData({ tab: e.currentTarget.dataset.tab }) },
-  previousMonth() { this.setData({ month: calendar.shiftMonth(this.data.month, -1) }, () => this.refresh()) },
-  nextMonth() { this.setData({ month: calendar.shiftMonth(this.data.month, 1) }, () => this.refresh()) },
-  selectDate(e) { const value = e.currentTarget.dataset.date; this.setData({ selectedDate: value, month: value.slice(0, 7) }, () => this.refresh()) },
+  previousMonth() { this.shiftMonth(-1) },
+  nextMonth() { this.shiftMonth(1) },
+  shiftMonth(amount) {
+    const vacation = store.getState().vacation
+    const target = calendar.shiftMonth(this.data.month, amount)
+    if (target < vacation.startDate.slice(0, 7) || target > vacation.endDate.slice(0, 7)) return wx.showToast({ title: '已到假期范围边界', icon: 'none' })
+    const firstDay = `${target}-01`
+    const selectedDate = firstDay < vacation.startDate ? vacation.startDate : firstDay > vacation.endDate ? vacation.endDate : firstDay
+    this.setData({ month: target, selectedDate }, () => this.refresh())
+  },
+  selectDate(e) { const value = e.currentTarget.dataset.date; const vacation = store.getState().vacation; if (value < vacation.startDate || value > vacation.endDate) return; this.setData({ selectedDate: value, month: value.slice(0, 7) }, () => this.refresh()) },
   addTask() { wx.navigateTo({ url: `/pages/task-edit/task-edit?date=${this.data.selectedDate}` }) },
   editTask(e) { wx.navigateTo({ url: `/pages/task-edit/task-edit?id=${e.currentTarget.dataset.id}` }) },
   addGoal() { wx.navigateTo({ url: '/pages/goal-edit/goal-edit' }) },

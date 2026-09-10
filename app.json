@@ -1,5 +1,5 @@
 {
-  "pages": ["pages/index/index", "pages/setup/setup", "pages/today/today", "pages/plan/plan", "pages/profile/profile", "pages/task-edit/task-edit", "pages/goal-edit/goal-edit"],
+  "pages": ["pages/index/index", "pages/setup/setup", "pages/today/today", "pages/plan/plan", "pages/profile/profile", "pages/task-edit/task-edit", "pages/goal-edit/goal-edit", "pages/overdue/overdue"],
   "window": { "navigationStyle": "custom", "backgroundColor": "#f8f7f3", "backgroundTextStyle": "dark" },
   "tabBar": {
     "custom": true, "color": "#777777", "selectedColor": "#1769ff", "backgroundColor": "#fbfaf7",
