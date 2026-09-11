@@ -14,11 +14,11 @@
   <view class="section-head"><text class="section-title">今日安排</text><view><text class="blue big-number">{{doneCount}}</text><text class="muted">/{{tasks.length}} 已完成</text></view></view>
   <view wx:if="{{!tasks.length}}" class="empty">这一天还没有安排，点击下方 ＋ 添加</view>
   <view class="timeline">
-    <view wx:for="{{tasks}}" wx:key="_id" class="task {{item.done ? 'done' : ''}}" data-id="{{item._id}}" data-day="{{item.occurrenceDate}}" bindlongpress="taskMenu">
+    <view wx:for="{{tasks}}" wx:key="instanceKey" class="task {{item.done ? 'done' : ''}}" data-id="{{item._id}}" data-day="{{item.occurrenceDate}}" data-display-day="{{item.displayDate}}" bindlongpress="taskMenu">
       <text class="time">{{item.time || '全天'}}</text>
       <view class="check {{item.done ? 'checked' : ''}}" data-id="{{item._id}}" data-day="{{item.occurrenceDate}}" data-done="{{item.done}}" bindtap="toggle">{{item.done ? '✓' : ''}}</view>
       <view class="task-main"><text class="task-title">{{item.title}}</text><text wx:if="{{item.note}}" class="task-note">{{item.note}}</text></view>
-      <view class="task-more" data-id="{{item._id}}" data-day="{{item.occurrenceDate}}" catchtap="taskMenu">•••</view>
+      <view class="task-more" data-id="{{item._id}}" data-day="{{item.occurrenceDate}}" data-display-day="{{item.displayDate}}" catchtap="taskMenu">•••</view>
     </view>
   </view>
   <view wx:if="{{goals.length}}" class="goals-section">

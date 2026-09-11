@@ -14,7 +14,11 @@ async function putMany(name, openid, rows) {
 }
 exports.main = async event => {
   const { OPENID: openid } = cloud.getWXContext()
-  if (!['clear', 'sample'].includes(event.action)) throw new Error('Unsupported batch action')
+  if (!['clear', 'sample', 'reschedule'].includes(event.action)) throw new Error('Unsupported batch action')
+  if (event.action === 'reschedule') {
+    await putMany('task_records', openid, event.records || [])
+    return { ok: true, count: (event.records || []).length }
+  }
   await clear(openid)
   if (event.action === 'sample') {
     await put('vacations', openid, event.vacation)

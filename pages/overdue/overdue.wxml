@@ -2,6 +2,10 @@
   <view class="nav"><text bindtap="back">‹ 返回</text><text class="nav-title">逾期任务</text><text class="nav-space">返回</text></view>
   <view class="title">重新安排</view>
   <view class="intro">这里只显示假期内、今天以前尚未完成的任务。</view>
+  <view wx:if="{{items.length}}" class="smart-card">
+    <view><view class="smart-label">SMART RESCHEDULE</view><view class="smart-title">让积压重新变得可执行</view><view class="smart-desc">根据剩余日期的任务量，自动均匀安排 {{items.length}} 项逾期任务。</view></view>
+    <view class="smart-button {{!canBatch ? 'disabled' : ''}}" bindtap="openPreview">一键智能重排</view>
+  </view>
   <view wx:if="{{!items.length}}" class="empty-card card"><text class="empty-title">已经全部处理完了</text><text class="muted">没有等待重新安排的任务</text></view>
   <view wx:for="{{items}}" wx:key="key" class="overdue-item card">
     <view class="item-date">{{item.dateText}}</view>
@@ -17,6 +21,16 @@
       <view class="modal-title">选择新的安排日期</view>
       <picker mode="date" value="{{moveDate}}" start="{{vacation.startDate}}" end="{{vacation.endDate}}" bindchange="onMoveDate"><view class="date-value">{{moveDate}} ›</view></picker>
       <view class="modal-actions"><view bindtap="cancelPicker">取消</view><view class="confirm" bindtap="confirmMove">确认调整</view></view>
+    </view>
+  </view>
+  <view wx:if="{{previewOpen}}" class="modal-mask" catchtap="closePreview">
+    <view class="preview-card" catchtap="noop">
+      <view class="preview-head"><view><view class="modal-title">重排预览</view><view class="preview-sub">{{previewMoves.length}} 项任务将分配到 {{previewGroups.length}} 天</view></view><text class="close" bindtap="closePreview">×</text></view>
+      <view wx:if="{{previewRemaining}}" class="limit-note">本次先处理 {{previewMoves.length}} 项，剩余 {{previewRemaining}} 项可完成后再次重排。</view>
+      <scroll-view class="preview-list" scroll-y enhanced show-scrollbar="{{false}}">
+        <view wx:for="{{previewGroups}}" wx:key="day" class="preview-row"><view class="preview-count">{{item.count}}</view><view class="preview-copy"><view class="preview-date">{{item.label}}</view><view class="preview-summary">{{item.summary}}</view></view></view>
+      </scroll-view>
+      <view class="preview-actions"><view class="cancel-action" bindtap="closePreview">取消</view><view class="batch-action {{batching ? 'disabled' : ''}}" bindtap="confirmBatch">{{batching ? '正在重排…' : '确认重排'}}</view></view>
     </view>
   </view>
 </view>

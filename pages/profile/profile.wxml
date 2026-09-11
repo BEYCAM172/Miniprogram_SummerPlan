@@ -16,7 +16,7 @@
     <view wx:for="{{heatmap}}" wx:key="key" class="heat-cell level-{{item.level}} {{item.blank ? 'blank' : ''}}" data-label="{{item.label}}" data-count="{{item.count}}" data-total="{{item.total}}" bindtap="showHeat"></view>
   </view>
   <view class="sync-card card">
-    <view><view class="sync-title">{{syncText}}</view><view class="sync-detail">{{syncDetail}}</view></view>
+    <view class="sync-copy"><view class="sync-title">{{syncText}}<text wx:if="{{pendingCount}}" class="pending-badge">{{pendingCount}}</text></view><view class="sync-detail">{{syncDetail}}</view><view wx:if="{{syncError}}" class="sync-error">{{syncError}}</view></view>
     <button loading="{{syncing}}" bindtap="retry">重新同步</button>
   </view>
   <view class="settings card">

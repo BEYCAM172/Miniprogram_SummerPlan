@@ -29,7 +29,7 @@ Page({
   },
   selectDate(e) { const value = e.currentTarget.dataset.date; const vacation = store.getState().vacation; if (value < vacation.startDate || value > vacation.endDate) return; this.setData({ selectedDate: value, month: value.slice(0, 7) }, () => this.refresh()) },
   addTask() { wx.navigateTo({ url: `/pages/task-edit/task-edit?date=${this.data.selectedDate}` }) },
-  editTask(e) { wx.navigateTo({ url: `/pages/task-edit/task-edit?id=${e.currentTarget.dataset.id}` }) },
+  editTask(e) { const { id, day, displayDay } = e.currentTarget.dataset; wx.navigateTo({ url: `/pages/task-edit/task-edit?id=${id}&occurrenceDate=${day}&displayDate=${displayDay || day}` }) },
   addGoal() { wx.navigateTo({ url: '/pages/goal-edit/goal-edit' }) },
   editGoal(e) { wx.navigateTo({ url: `/pages/goal-edit/goal-edit?id=${e.currentTarget.dataset.id}` }) },
   async toggle(e) { const { id, day, done } = e.currentTarget.dataset; wx.vibrateShort({ type: 'light' }); try { await store.toggleTask(id, day, !done) } catch (error) { wx.showToast({ title: '已离线保存', icon: 'none' }) } }

@@ -36,18 +36,18 @@ Page({
     try { await store.toggleTask(id, day, !done) } catch (error) { wx.showToast({ title: '已离线保存', icon: 'none' }) }
   },
   taskMenu(e) {
-    const { id, day } = e.currentTarget.dataset
-    wx.showActionSheet({ itemList: ['编辑任务', '移到今天', '选择新日期', '删除整个任务'], success: res => {
-      if (res.tapIndex === 0) wx.navigateTo({ url: `/pages/task-edit/task-edit?id=${id}` })
+    const { id, day, displayDay } = e.currentTarget.dataset
+    wx.showActionSheet({ itemList: ['编辑任务', '移到今天', '选择新日期', '删除任务…'], success: res => {
+      if (res.tapIndex === 0) wx.navigateTo({ url: `/pages/task-edit/task-edit?id=${id}&occurrenceDate=${day}&displayDate=${displayDay || day}` })
       if (res.tapIndex === 1) this.move(id, day, date.today())
       if (res.tapIndex === 2) this.setData({ movingId: id, movingDay: day, showMovePicker: true })
-      if (res.tapIndex === 3) this.confirmDelete(id)
+      if (res.tapIndex === 3) this.openTaskEditor(id, day, displayDay || day)
     } })
   },
   chooseMove(e) { this.setData({ showMovePicker: false }); this.move(this.data.movingId, this.data.movingDay, e.detail.value) },
   async move(id, from, to) { const target = to < this.data.vacation.startDate ? this.data.vacation.startDate : to > this.data.vacation.endDate ? this.data.vacation.endDate : to; try { await store.reschedule(id, from, target); wx.showToast({ title: '已调整日期' }) } catch (error) { wx.showToast({ title: '已离线保存', icon: 'none' }) } },
   showOverdue() { wx.navigateTo({ url: '/pages/overdue/overdue' }) },
-  confirmDelete(id) { wx.showModal({ title: '删除任务？', content: '重复任务的全部日期也会被删除。', confirmColor: '#d83b2d', success: async res => { if (res.confirm) { try { await store.remove('tasks', id) } catch (error) {} } } }) },
+  openTaskEditor(id, day, displayDay) { wx.navigateTo({ url: `/pages/task-edit/task-edit?id=${id}&occurrenceDate=${day}&displayDate=${displayDay}` }) },
   openGoal(e) { wx.navigateTo({ url: `/pages/goal-edit/goal-edit?id=${e.currentTarget.dataset.id}` }) },
   addGoal() { wx.navigateTo({ url: '/pages/goal-edit/goal-edit' }) }
 })

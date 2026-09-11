@@ -1,14 +1,19 @@
 <view class="page editor">
-  <view class="nav"><text bindtap="back">取消</text><text class="nav-title">{{editing ? '编辑任务' : '新建任务'}}</text><text class="save" bindtap="save">保存</text></view>
+  <view class="nav"><text bindtap="back">取消</text><text class="nav-title">{{editing ? '编辑任务' : '新建任务'}}</text><text class="save {{saving ? 'disabled' : ''}}" bindtap="save">{{saving ? '保存中' : '保存'}}</text></view>
+  <view wx:if="{{recurring}}" class="scope-box">
+    <view class="scope-title">修改范围</view>
+    <view class="scope-tabs"><view class="scope-tab {{editScope === 'occurrence' ? 'active' : ''}}" data-scope="occurrence" bindtap="onScope">仅这一次</view><view class="scope-tab {{editScope === 'future' ? 'active' : ''}}" data-scope="future" bindtap="onScope">此次及以后</view></view>
+    <view class="scope-hint">{{editScope === 'occurrence' ? '只改变当前这一天，不影响其他重复日期' : '保留过去记录，从这一天开始采用新计划'}}</view>
+  </view>
   <view class="field first"><text class="label">任务名称</text><input class="input title-input" value="{{title}}" maxlength="30" placeholder="准备做什么？" focus="{{!editing}}" bindinput="onTitle"/></view>
   <view class="form-card">
     <view class="form-row"><text>日期</text><picker mode="date" value="{{date}}" start="{{vacation.startDate}}" end="{{vacation.endDate}}" bindchange="onDate"><view class="value">{{date}} ›</view></picker></view>
     <view class="form-row"><text>时间</text><view class="inline"><text wx:if="{{time}}" class="clear" bindtap="clearTime">清除</text><picker mode="time" value="{{time || '09:00'}}" bindchange="onTime"><view class="value">{{time || '全天'}} ›</view></picker></view></view>
     <view class="form-row"><text>所属目标</text><picker range="{{goalNames}}" value="{{goalIndex}}" bindchange="onGoal"><view class="value">{{goalNames[goalIndex]}} ›</view></picker></view>
-    <view class="form-row"><text>重复</text><picker range="{{repeatTypes}}" range-key="label" value="{{repeatIndex}}" bindchange="onRepeat"><view class="value">{{repeatTypes[repeatIndex].label}} ›</view></picker></view>
+    <view wx:if="{{!recurring || editScope === 'future'}}" class="form-row"><text>重复</text><picker range="{{repeatTypes}}" range-key="label" value="{{repeatIndex}}" bindchange="onRepeat"><view class="value">{{repeatTypes[repeatIndex].label}} ›</view></picker></view>
   </view>
-  <view wx:if="{{repeatTypes[repeatIndex].value === 'weekly'}}" class="weekday-picker"><text class="label">每周重复</text><view class="week-buttons"><view wx:for="{{weekdays}}" wx:key="value" class="week-button {{item.selected ? 'selected' : ''}}" data-value="{{item.value}}" bindtap="toggleWeekday">{{item.label}}</view></view></view>
+  <view wx:if="{{(!recurring || editScope === 'future') && repeatTypes[repeatIndex].value === 'weekly'}}" class="weekday-picker"><text class="label">每周重复</text><view class="week-buttons"><view wx:for="{{weekdays}}" wx:key="value" class="week-button {{item.selected ? 'selected' : ''}}" data-value="{{item.value}}" bindtap="toggleWeekday">{{item.label}}</view></view></view>
   <view class="field note"><text class="label">备注</text><textarea class="input textarea" value="{{note}}" maxlength="120" placeholder="补充一些细节（可选）" bindinput="onNote"/></view>
-  <button class="primary" loading="{{saving}}" bindtap="save">{{editing ? '保存修改' : '添加到计划'}}</button>
-  <button wx:if="{{editing}}" class="delete" bindtap="remove">删除任务</button>
+  <button class="primary" loading="{{saving}}" disabled="{{saving || deleting}}" bindtap="save">{{editing ? '保存修改' : '添加到计划'}}</button>
+  <button wx:if="{{editing}}" class="delete" loading="{{deleting}}" disabled="{{saving || deleting}}" bindtap="remove">删除任务</button>
 </view>
