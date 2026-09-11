@@ -1,0 +1,43 @@
+<view wx:if="{{report}}" class="page report-page">
+  <view class="nav"><text bindtap="back">‹ 返回</text><text class="nav-title">暑期报告</text><text class="nav-space">返回</text></view>
+
+  <view class="report-hero">
+    <view class="hero-orbit orbit-one"></view><view class="hero-orbit orbit-two"></view>
+    <view class="hero-kicker">MY SUMMER REPORT</view>
+    <view class="hero-name">{{report.vacation.name}}</view>
+    <view class="hero-score"><text>{{report.summary.percent}}</text><text class="score-unit">%</text></view>
+    <view class="hero-caption">截至今日计划完成率</view>
+    <view class="hero-progress"><view style="width:{{report.summary.percent}}%"></view></view>
+    <view class="hero-date">{{report.generatedDate}}</view>
+  </view>
+
+  <view class="metric-grid">
+    <view class="metric-card"><text class="metric-value">{{report.summary.dueDone}}</text><text class="metric-label">完成任务</text></view>
+    <view class="metric-card"><text class="metric-value">{{report.summary.activeDays}}</text><text class="metric-label">活跃天数</text></view>
+    <view class="metric-card"><text class="metric-value">{{report.summary.streak}}</text><text class="metric-label">连续行动</text></view>
+  </view>
+
+  <view class="insight-card card"><view class="insight-label">这一段夏天</view><view class="insight-text">{{report.narrative}}</view></view>
+
+  <view class="section-head"><text class="section-title">行动趋势</text><text class="muted">最近六周</text></view>
+  <view wx:if="{{report.trend.length}}" class="trend-card card">
+    <view wx:for="{{report.trend}}" wx:key="index" class="trend-column">
+      <view class="trend-value">{{item.percent}}%</view><view class="trend-track"><view class="trend-fill" style="height:{{item.height}}%"></view></view><view class="trend-label">{{item.label}}</view>
+    </view>
+  </view>
+  <view wx:else class="empty-section card">假期开始后，这里会出现每周行动趋势</view>
+
+  <view class="highlight-grid">
+    <view class="highlight-card"><view class="highlight-kicker">BEST DAY</view><view class="highlight-value">{{report.bestDay ? report.bestDay.label : '等待点亮'}}</view><view class="highlight-desc">{{report.bestDay ? '完成 ' + report.bestDay.done + ' 项任务' : '完成任务后生成'}}</view></view>
+    <view class="highlight-card"><view class="highlight-kicker">TOP GOAL</view><view class="highlight-value">{{report.topGoal ? report.topGoal.title : '尚无目标'}}</view><view class="highlight-desc">{{report.topGoal ? '推进 ' + report.topGoal.progress.done + ' 项' : '创建目标后生成'}}</view></view>
+  </view>
+
+  <view class="section-head achievement-head"><text class="section-title">暑期成就</text><text class="muted">{{report.unlockedCount}}/6 已解锁</text></view>
+  <view class="achievement-grid">
+    <view wx:for="{{report.achievements}}" wx:key="key" class="achievement {{item.unlocked ? 'unlocked' : ''}}">
+      <view class="achievement-icon">{{item.icon}}</view><view class="achievement-name">{{item.name}}</view><view class="achievement-desc">{{item.description}}</view><view class="achievement-status">{{item.unlocked ? '已解锁' : '未解锁'}}</view>
+    </view>
+  </view>
+
+  <view class="share-actions"><view class="copy-action" bindtap="copySummary">复制总结</view><button class="share-action" open-type="share">分享小程序</button></view>
+</view>

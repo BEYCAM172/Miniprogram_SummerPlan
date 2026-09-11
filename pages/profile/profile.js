@@ -14,6 +14,7 @@ Page({
     this.setData({ vacation: state.vacation, progress: stats.vacationProgress(state.vacation), summary: stats.summary(state), heatmap: stats.heatmap(state), syncText: map[state.sync.status] || '仅本地', syncDetail: pendingCount ? `${pendingCount} 项修改等待上传 · ${lastText}` : lastText, syncError: state.sync.error || '', pendingCount })
   },
   async retry() { if (this.data.syncing) return; this.setData({ syncing: true }); try { const result = await store.flushQueue(); await store.syncFromCloud(); wx.showToast({ title: result.pending ? `仍有 ${result.pending} 项待同步` : '同步完成', icon: result.pending ? 'none' : 'success' }) } catch(e) { wx.showToast({ title: '同步失败，修改仍在本机', icon: 'none' }) } this.setData({ syncing: false }); this.refresh() },
+  viewReport() { wx.navigateTo({ url: '/pages/report/report' }) },
   editVacation() { wx.navigateTo({ url: '/pages/setup/setup?edit=1' }) },
   restore() { wx.showModal({ title: '恢复示例计划？', content: '当前目标、任务和完成记录将被覆盖。', success: async r => { if (!r.confirm) return; try { await store.batch('sample', store.getState().vacation) } catch(e) {}; this.refresh() } }) },
   clear() { wx.showModal({ title: '清空所有数据？', content: '该操作会删除当前账号的全部暑期计划。', confirmColor: '#d83b2d', success: async r => { if (!r.confirm) return; try { await store.batch('clear') } catch(e) {}; wx.reLaunch({ url: '/pages/setup/setup' }) } }) },

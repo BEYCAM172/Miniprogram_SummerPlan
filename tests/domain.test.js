@@ -4,6 +4,7 @@ const model = require('../services/model')
 const stats = require('../services/stats')
 const syncLogic = require('../services/sync-logic')
 const reschedule = require('../services/reschedule')
+const reportService = require('../services/report')
 
 const state = {
   vacation: { startDate: '2026-07-01', endDate: '2026-07-07' },
@@ -56,4 +57,15 @@ assert.equal(balanced.moves.length, 3)
 assert.equal(balanced.groups.length, 2)
 assert.equal(balanced.moves.filter(item => item.rescheduledTo === '2026-07-04').length, 2)
 assert.equal(balanced.moves.filter(item => item.rescheduledTo === '2026-07-05').length, 1)
+
+const report = reportService.buildReport(state, '2026-07-03')
+assert.equal(report.summary.percent, 25)
+assert.equal(report.summary.activeDays, 1)
+assert.equal(report.bestDay.day, '2026-07-01')
+assert.equal(report.achievements.find(item => item.key === 'first').unlocked, true)
+assert.equal(report.trend.length, 1)
+
+const upcomingReport = reportService.buildReport({ vacation: { name: '未来暑假', startDate: '2026-08-01', endDate: '2026-08-31' }, goals: [], tasks: [], records: [] }, '2026-07-01')
+assert.equal(upcomingReport.status, 'upcoming')
+assert.equal(upcomingReport.summary.due, 0)
 console.log('domain tests OK')

@@ -11,6 +11,9 @@
     <view><text class="metric-value">{{summary.percent}}%</text><text class="metric-label">截至今日完成率</text></view>
     <view><text class="metric-value">{{summary.streak}}</text><text class="metric-label">连续天数</text></view>
   </view>
+  <view class="report-entry" bindtap="viewReport">
+    <view><view class="report-kicker">MY SUMMER REPORT</view><view class="report-title">查看我的暑期报告</view><view class="report-desc">行动趋势、最佳一天与 6 枚暑期成就</view></view><view class="report-arrow">↗</view>
+  </view>
   <view class="section-head"><text class="section-title">完成热力图</text><text class="muted">按日期点击查看</text></view>
   <view class="heat card">
     <view wx:for="{{heatmap}}" wx:key="key" class="heat-cell level-{{item.level}} {{item.blank ? 'blank' : ''}}" data-label="{{item.label}}" data-count="{{item.count}}" data-total="{{item.total}}" bindtap="showHeat"></view>

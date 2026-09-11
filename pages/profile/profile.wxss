@@ -4,10 +4,11 @@
 .bar { width: 100%; height: 8rpx; margin: 24rpx 0; overflow: hidden; border-radius: 8rpx; background: #e4e3df; }
 .bar-fill { height: 100%; background: #1769ff; }
 .range { color: #858a92; font-size: 23rpx; }
-.metrics { display: flex; margin: 42rpx 0 56rpx; }
-.metrics > view { flex: 1; display: flex; flex-direction: column; }
-.metric-value { font-size: 43rpx; font-weight: 800; }
-.metric-label { margin-top: 8rpx; color: #8d9197; font-size: 22rpx; }
+.metrics { display: flex; margin: 42rpx 0 30rpx; }
+.metrics > view { flex:1; min-width:0; display:flex; flex-direction:column; align-items:center; text-align:center; }
+.metric-value { min-height:56rpx; line-height:56rpx; font-size:43rpx; font-weight:800; font-variant-numeric:tabular-nums; }
+.metric-label { width:100%; margin-top:8rpx; color:#8d9197; font-size:22rpx; line-height:32rpx; text-align:center; }
+.report-entry { display:flex; align-items:center; justify-content:space-between; margin-bottom:50rpx; padding:30rpx; color:#101722; background:linear-gradient(135deg,#f8faff,#e9f1ff); border:1rpx solid #d9e5ff; border-radius:24rpx; box-shadow:0 14rpx 32rpx rgba(23,105,255,.08); }.report-kicker { color:#1769ff; font-size:18rpx; letter-spacing:2rpx; }.report-title { margin-top:10rpx; font-size:30rpx; font-weight:750; }.report-desc { margin-top:8rpx; color:#748096; font-size:21rpx; }.report-arrow { width:62rpx; height:62rpx; line-height:62rpx; text-align:center; color:#1769ff; background:#fff; border:1rpx solid #cbdcff; border-radius:50%; font-size:29rpx; }
 .section-head { display: flex; align-items: baseline; justify-content: space-between; }
 .section-head .muted { font-size: 22rpx; }
 .heat { display: flex; flex-wrap: wrap; margin-top: 22rpx; padding: 20rpx; }
